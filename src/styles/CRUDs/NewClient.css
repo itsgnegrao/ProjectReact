@@ -1,0 +1,58 @@
+.NewClient {
+  text-align: center;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: black;
+  text-align: center;
+}
+
+.NewClient-header {
+  background-color: white;
+  min-height: 25vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: black;
+}
+
+.NewClient-body {
+  width: 600px;
+}
+
+.NewClient-button {
+  width: 150px;
+  margin-top: 20px;
+}
+
+.NewClient-spinner {
+  padding-bottom: 20px;
+  margin-top: 20px;
+}
+
+.NewClient-span1 {
+  height: 10px;
+  display: block;
+}
+
+.NewClient-input {
+  width: 300px;
+}
+
+.NewClient-title {
+  padding-bottom: 20px;
+}
+
+.NewClient-p {
+  font-size: 12px;
+  padding-right: 20px;
+}
+
+.NewClient-btPassword {
+  height: 38px;
+}
