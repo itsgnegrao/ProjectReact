@@ -12,6 +12,7 @@ import {
   ModalFooter,
   ModalHeader
 } from "reactstrap";
+import { postWithLogin, deleteWithLogin } from "../../../controllers/request";
 
 function SearchClient(props) {
   const [state, setState] = useState({
@@ -21,27 +22,34 @@ function SearchClient(props) {
     msgModalSuccess: "",
     element: null,
     vaLue: "Testerson Da Silva Teste",
-    filter: "name",
-    list: [
-      {
-        nome: "Testerson Da Silva Teste",
-        sexo: "M",
-        email: "itsgnegrao@teste.com.br",
-        data_nasc: "15/10/1996",
-        naturalidade: "Campo Mourão - Paraná",
-        nacionalidade: "Brasil",
-        cpf: "084.743.929-18"
-      },
-      {
-        nome: "Testerson Da Silva Teste2",
-        sexo: "M",
-        email: "itsgnegrao@teste.com.br",
-        data_nasc: "15/10/1996",
-        naturalidade: "Campo Mourão - Paraná",
-        nacionalidade: "Brasil",
-        cpf: "084.743.929-13"
-      }
-    ]
+    filter: "name"
+
+    // list: [
+    //   {
+    //     nome: "Testerson Da Silva Teste",
+    //     sexo: "M",
+    //     email: "itsgnegrao@teste.com.br",
+    //     data_nasc: "15/10/1996",
+    //     naturalidade: "Campo Mourão - Paraná",
+    //     nacionalidade: "Brasil",
+    //     cpf: "084.743.929-18"
+    //   },
+    //   {
+    //     nome: "Testerson Da Silva Teste2",
+    //     sexo: "M",
+    //     email: "itsgnegrao@teste.com.br",
+    //     data_nasc: "15/10/1996",
+    //     naturalidade: "Campo Mourão - Paraná",
+    //     nacionalidade: "Brasil",
+    //     cpf: "084.743.929-13"
+    //   }
+    // ]
+  });
+  const [user, setUser] = useState(props.user);
+  const [list, setList] = useState([]);
+  const [filter, setFilter] = useState({
+    campo: "",
+    valor: ""
   });
 
   const nestedObjectSet = (obj, path, value) => {
@@ -72,25 +80,27 @@ function SearchClient(props) {
 
   const populate = list => {
     let elements = [];
-    list.forEach(element => {
-      elements.push(
-        <Alert
-          color="primary"
-          style={{ fontSize: "14px" }}
-          value={element}
-          onClick={() => handleClickAlert(element)}
-        >
-          Nome: {element.nome} , Sexo: {element.sexo} , Email: {element.email} ,
-          Naturalidade: {element.naturalidade} , Nacionalidade:{" "}
-          {element.nacionalidade} , CPF: {element.cpf}
-        </Alert>
-      );
-    });
+    if (list.length > 0) {
+      list.forEach(element => {
+        elements.push(
+          <Alert
+            color="primary"
+            style={{ fontSize: "14px" }}
+            value={element}
+            onClick={() => handleClickAlert(element)}
+          >
+            Nome: {element.nome} , Sexo: {element.sexo} , Email: {element.email}{" "}
+            , Naturalidade: {element.naturalidade} , Nacionalidade:{" "}
+            {element.nacionalidade} , CPF: {element.cpf}
+          </Alert>
+        );
+      });
+    }
     return elements;
   };
 
   const handleBuscar = () => {
-    console.log("chama aqui a func de buscar e popular");
+    getList();
   };
 
   // Modals+Handles
@@ -168,15 +178,23 @@ function SearchClient(props) {
     });
   };
 
-  const handleModalDelete = () => {
-    console.log("chama aqui a func de deletar");
+  const handleModalDelete = async () => {
+    let resp = await deleteWithLogin(
+      process.env.REACT_APP_API_URL_APIV1 + "/client/1",
+      user
+    );
 
     setState({
       ...state,
-      msgModalSuccess: "Cliente Deletado Com Sucesso!",
+      msgModalSuccess:
+        resp.success === true
+          ? "Cliente Deletado Com Sucesso!"
+          : "Falha ao Deletar Cliente!",
       visibleModalDelete: !state.visibleModalDelete,
       visibleModalSuccess: !state.visibleModalSuccess
     });
+
+    handleBuscar();
   };
 
   // Modals+Handles
@@ -202,6 +220,19 @@ function SearchClient(props) {
       visibleModalSuccess: !state.visibleModalSuccess
     });
   };
+
+  const getList = async () => {
+    let resp = await postWithLogin(
+      process.env.REACT_APP_API_URL_APIV1 + "/client/get",
+      filter,
+      user
+    );
+    setList(resp.content);
+  };
+
+  if (list.length === 0) {
+    getList();
+  }
 
   return (
     <div className="NewClient">
@@ -238,7 +269,7 @@ function SearchClient(props) {
             </FormGroup>
           </Form>
 
-          <div>{populate(state.list)}</div>
+          <div>{populate(list)}</div>
 
           <Button
             className="Login-button"

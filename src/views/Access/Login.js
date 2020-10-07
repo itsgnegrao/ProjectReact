@@ -21,7 +21,7 @@ import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 
 function Login(props) {
   const [state, setState] = useState({
-    email: "itsgnegrao@teste.com.br",
+    email: "testerson@teste.com.br",
     password: "123mudar@",
     loading: false,
     msgModal: "",
@@ -72,7 +72,7 @@ function Login(props) {
         setState({ ...state, loading: true });
 
         let resp = await doLogin(state.email, state.password);
-        // console.log(resp);
+        console.log(resp);
 
         setState({ ...state, loading: false });
 

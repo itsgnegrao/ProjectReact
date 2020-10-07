@@ -14,8 +14,8 @@ class App extends React.Component {
       user: {
         email: "itsgnegrao@teste.com.br",
         auth: false,
-        expires: 600,
-        token: "Basic aXRzZ25lZ3Jhb0B0ZXN0ZS5jb20uYnI6MTIzbXVkYXJA"
+        expires: 0,
+        token: ""
       },
       opt: "",
       element: null
@@ -56,11 +56,19 @@ class App extends React.Component {
 
   Opt = () => {
     if (this.state.opt === "new") {
-      return <NewClient return={this.onReturn} />;
+      return <NewClient return={this.onReturn} user={this.state.user} />;
     } else if (this.state.opt === "search") {
-      return <SearchClient return={this.onReturnSearch} />;
+      return (
+        <SearchClient return={this.onReturnSearch} user={this.state.user} />
+      );
     } else if (this.state.opt === "edit") {
-      return <EditClient return={this.onReturn} client={this.state.element} />;
+      return (
+        <EditClient
+          return={this.onReturn}
+          client={this.state.element}
+          user={this.state.user}
+        />
+      );
     } else {
       return <Client setOpt={this.setOpt} />;
     }

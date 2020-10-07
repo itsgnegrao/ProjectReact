@@ -1,17 +1,19 @@
 import React, { useState } from "react";
 import "../../../styles/CRUDs/NewClient.css";
 import { Form, FormGroup, Input, Button, Label } from "reactstrap";
+import { postWithLogin } from "../../../controllers/request";
 
 function NewClient(props) {
   const [state, setState] = useState({
     nome: "Testerson Da Silva Teste",
     sexo: "M",
     email: "itsgnegrao@teste.com.br",
-    data_nasc: "15/10/1996",
+    data_nasc: "1996-10-15",
     naturalidade: "Campo Mourão - Paraná",
     nacionalidade: "Brasil",
-    cpf: "084.743.929-18"
+    cpf: "08474392918"
   });
+  const [user, setUser] = useState(props.user);
 
   const nestedObjectSet = (obj, path, value) => {
     let schema = obj; // a moving reference to internal objects within obj
@@ -31,8 +33,13 @@ function NewClient(props) {
     setState(newState);
   };
 
-  const handleCadastrar = () => {
-    console.log("chama aqui a func de cadastrar");
+  const handleCadastrar = async () => {
+    let resp = await postWithLogin(
+      process.env.REACT_APP_API_URL_APIV1 + "/client",
+      state,
+      user
+    );
+    console.log(resp);
   };
 
   return (
