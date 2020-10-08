@@ -1,5 +1,10 @@
-/node_modules
-/build
+node_modules
+npm-debug.log
+build
+.dockerignore
+**/.git
+**/.DS_Store
+**/node_modules
 .git
 .gitignore
 *.md
