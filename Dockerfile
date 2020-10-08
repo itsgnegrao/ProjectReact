@@ -8,12 +8,12 @@ WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
 
 # install app dependencies
-COPY package.json ./
-COPY package-lock.json ./
-RUN npm install
+COPY package.json /app
+COPY package-lock.json ./app
+RUN npm install --silent
 
 # add app
-COPY . ./
+COPY . /app
 
 # start app
 CMD ["npm", "start"]    
