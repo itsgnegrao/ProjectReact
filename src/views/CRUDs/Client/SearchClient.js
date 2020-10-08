@@ -10,7 +10,8 @@ import {
   Modal,
   ModalBody,
   ModalFooter,
-  ModalHeader
+  ModalHeader,
+  Row
 } from "reactstrap";
 import { postWithLogin, deleteWithLogin } from "../../../controllers/request";
 
@@ -20,30 +21,7 @@ function SearchClient(props) {
     visibleModalDelete: false,
     visibleModalSuccess: false,
     msgModalSuccess: "",
-    element: null,
-    vaLue: "Testerson Da Silva Teste",
-    filter: "name"
-
-    // list: [
-    //   {
-    //     nome: "Testerson Da Silva Teste",
-    //     sexo: "M",
-    //     email: "itsgnegrao@teste.com.br",
-    //     data_nasc: "15/10/1996",
-    //     naturalidade: "Campo Mourão - Paraná",
-    //     nacionalidade: "Brasil",
-    //     cpf: "084.743.929-18"
-    //   },
-    //   {
-    //     nome: "Testerson Da Silva Teste2",
-    //     sexo: "M",
-    //     email: "itsgnegrao@teste.com.br",
-    //     data_nasc: "15/10/1996",
-    //     naturalidade: "Campo Mourão - Paraná",
-    //     nacionalidade: "Brasil",
-    //     cpf: "084.743.929-13"
-    //   }
-    // ]
+    element: null
   });
   const [user, setUser] = useState(props.user);
   const [list, setList] = useState([]);
@@ -52,22 +30,8 @@ function SearchClient(props) {
     valor: ""
   });
 
-  const nestedObjectSet = (obj, path, value) => {
-    let schema = obj; // a moving reference to internal objects within obj
-    const pList = path.split(".");
-    const len = pList.length;
-    for (let i = 0; i < len - 1; i++) {
-      let elem = pList[i];
-      if (!schema[elem]) schema[elem] = {};
-      schema = schema[elem];
-    }
-    schema[pList[len - 1]] = value;
-  };
-
   const handleChangeFields = e => {
-    let newState = Object.assign({}, state);
-    nestedObjectSet(newState, e.target.name, e.target.value);
-    setState(newState);
+    setFilter({ ...filter, valor: e.target.value });
   };
 
   const handleClickAlert = e => {
@@ -89,9 +53,15 @@ function SearchClient(props) {
             value={element}
             onClick={() => handleClickAlert(element)}
           >
-            Nome: {element.nome} , Sexo: {element.sexo} , Email: {element.email}{" "}
-            , Naturalidade: {element.naturalidade} , Nacionalidade:{" "}
-            {element.nacionalidade} , CPF: {element.cpf}
+            <b>CPF:</b> {element.cpf} <b>Nome</b>: {element.nome} <b>Sexo</b>:{" "}
+            {element.sexo} <b>Email</b>: {element.email} <b>Naturalidade</b>:{" "}
+            {element.naturalidade} <b>Nacionalidade</b>: {element.nacionalidade}{" "}
+            <b>Data_Nasc</b>:{" "}
+            {Intl.DateTimeFormat("en-GB", {
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit"
+            }).format(new Date(element.data_nasc))}
           </Alert>
         );
       });
@@ -180,7 +150,7 @@ function SearchClient(props) {
 
   const handleModalDelete = async () => {
     let resp = await deleteWithLogin(
-      process.env.REACT_APP_API_URL_APIV1 + "/client/1",
+      process.env.REACT_APP_API_URL_APIV1 + "/client/" + state.element.id,
       user
     );
 
@@ -234,6 +204,10 @@ function SearchClient(props) {
     getList();
   }
 
+  const handleFilter = e => {
+    setFilter({ ...filter, campo: e.target.value });
+  };
+
   return (
     <div className="NewClient">
       {modal()}
@@ -246,41 +220,66 @@ function SearchClient(props) {
 
           <Form>
             <FormGroup>
-              <div>
+              <Row
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}
+              >
+                <Input
+                  type="select"
+                  name="select"
+                  id="exampleSelect"
+                  style={{ width: "160px", marginRight: "10px" }}
+                  onClick={handleFilter}
+                >
+                  <option selected value></option>
+                  <option>CPF</option>
+                  <option>NOME</option>
+                  <option>EMAIL</option>
+                  <option>SEXO</option>
+                  <option>NATURALIDADE</option>
+                  <option>NACIONALIDADE</option>
+                </Input>
+
                 <Input
                   className="NewClient-input"
-                  type="text"
-                  name="nome"
-                  data-value="nome"
-                  value={state.nome}
+                  type="search"
+                  name="valor"
+                  data-value="valor"
+                  value={filter.valor}
                   onChange={handleChangeFields}
-                  placeholder="Nome"
+                  placeholder="Valor"
+                  style={{ width: "300px", marginRight: "10px" }}
                 />
 
-                <Button
-                  className="Login-button"
-                  color="primary"
-                  id="ButtonLogin"
-                  onClick={handleBuscar}
-                >
+                <Button color="primary" id="ButtonLogin" onClick={handleBuscar}>
                   Buscar
                 </Button>
-              </div>
+              </Row>
             </FormGroup>
           </Form>
-
-          <div>{populate(list)}</div>
-
-          <Button
-            className="Login-button"
-            color="primary"
-            id="ButtonLogin"
-            onClick={() => props.return("", null)}
-          >
-            Voltar
-          </Button>
         </div>
       </div>
+      <div
+        style={{
+          width: "80%",
+          alignItems: "center",
+          justifyContent: "center"
+        }}
+      >
+        {populate(list)}
+      </div>
+
+      <Button
+        className="Login-button"
+        color="primary"
+        id="ButtonLogin"
+        onClick={() => props.return("", null)}
+      >
+        Voltar
+      </Button>
     </div>
   );
 }

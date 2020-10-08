@@ -26,7 +26,8 @@ function Login(props) {
     loading: false,
     msgModal: "",
     visibleModalLogin: false,
-    showPassword: false
+    showPassword: false,
+    emailValid: null
   });
 
   // Modals+Handles Login
@@ -115,7 +116,16 @@ function Login(props) {
   };
 
   const handleChangeEmail = e => {
-    setState({ ...state, email: e.target.value });
+    setState({
+      ...state,
+      email: e.target.value,
+      emailValid:
+        e.target.value !== ""
+          ? !validateEmail(e.target.value)
+            ? "invalid"
+            : "valid"
+          : null
+    });
   };
 
   return (
@@ -128,15 +138,41 @@ function Login(props) {
 
           <Form>
             <FormGroup>
-              <Input
-                className="Login-input"
-                type="email"
-                name="email"
-                value={state.email}
-                onChange={handleChangeEmail}
-                id="exampleEmail"
-                placeholder="Email"
-              />
+              {state.emailValid ? (
+                state.emailValid === "valid" ? (
+                  <Input
+                    valid
+                    className="Login-input"
+                    type="email"
+                    name="email"
+                    value={state.email}
+                    onChange={handleChangeEmail}
+                    id="exampleEmail"
+                    placeholder="Email"
+                  />
+                ) : (
+                  <Input
+                    invalid
+                    className="Login-input"
+                    type="email"
+                    name="email"
+                    value={state.email}
+                    onChange={handleChangeEmail}
+                    id="exampleEmail"
+                    placeholder="Email"
+                  />
+                )
+              ) : (
+                <Input
+                  className="Login-input"
+                  type="email"
+                  name="email"
+                  value={state.email}
+                  onChange={handleChangeEmail}
+                  id="exampleEmail"
+                  placeholder="Email"
+                />
+              )}
 
               <span className="Login-span1" />
 

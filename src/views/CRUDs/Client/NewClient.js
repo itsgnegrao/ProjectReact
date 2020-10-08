@@ -2,6 +2,11 @@ import React, { useState } from "react";
 import "../../../styles/CRUDs/NewClient.css";
 import { Form, FormGroup, Input, Button, Label } from "reactstrap";
 import { postWithLogin } from "../../../controllers/request";
+import {
+  validateEmail,
+  validateCpf,
+  validateDate
+} from "../../../tools/validator";
 
 function NewClient(props) {
   const [state, setState] = useState({
@@ -14,6 +19,11 @@ function NewClient(props) {
     cpf: "08474392918"
   });
   const [user, setUser] = useState(props.user);
+  const [validates, setValidates] = useState({
+    email: null,
+    cpf: "invalid",
+    data: "invalid"
+  });
 
   const nestedObjectSet = (obj, path, value) => {
     let schema = obj; // a moving reference to internal objects within obj
@@ -31,6 +41,40 @@ function NewClient(props) {
     let newState = Object.assign({}, state);
     nestedObjectSet(newState, e.target.name, e.target.value);
     setState(newState);
+
+    if (e.target.name === "email") {
+      setValidates({
+        ...validates,
+        email:
+          e.target.value !== ""
+            ? !validateEmail(e.target.value)
+              ? "invalid"
+              : "valid"
+            : null
+      });
+    } else if (e.target.name === "cpf") {
+      setValidates({
+        ...validates,
+        cpf:
+          e.target.value !== ""
+            ? !validateCpf(e.target.value)
+              ? "invalid"
+              : "valid"
+            : null
+      });
+    }
+    // O componente Date excolhido retorna sempre um dia a menos por isso a validação com difernça de 1 dia
+    else if (e.target.name === "data_nasc") {
+      setValidates({
+        ...validates,
+        data_nasc:
+          e.target.value !== ""
+            ? !validateDate(e.target.value)
+              ? "invalid"
+              : "valid"
+            : null
+      });
+    }
   };
 
   const handleCadastrar = async () => {
@@ -39,7 +83,16 @@ function NewClient(props) {
       state,
       user
     );
-    console.log(resp);
+
+    alert(
+      resp.success
+        ? "Cliente Cadastrado com Sucesso!!"
+        : "Erro ao Cadastrar Cliente!\n\n" +
+            (resp.content !== null ? resp.content.join("\n") : "")
+    );
+    if (resp.success) {
+      props.return();
+    }
   };
 
   return (
@@ -74,27 +127,70 @@ function NewClient(props) {
 
               <span className="NewClient-span1" />
 
-              <Input
-                className="NewClient-input"
-                type="text"
-                name="email"
-                data-value="email"
-                value={state.email}
-                onChange={handleChangeFields}
-                placeholder="Email"
-              />
+              {validates.email ? (
+                validates.email === "valid" ? (
+                  <Input
+                    valid
+                    className="NewClient-input"
+                    data-value="email"
+                    type="email"
+                    name="email"
+                    value={state.email}
+                    onChange={handleChangeFields}
+                    id="exampleEmail"
+                    placeholder="Email"
+                  />
+                ) : (
+                  <Input
+                    invalid
+                    className="NewClient-input"
+                    data-value="email"
+                    type="email"
+                    name="email"
+                    value={state.email}
+                    onChange={handleChangeFields}
+                    id="exampleEmail"
+                    placeholder="Email"
+                  />
+                )
+              ) : (
+                <Input
+                  className="NewClient-input"
+                  data-value="email"
+                  type="email"
+                  name="email"
+                  value={state.email}
+                  onChange={handleChangeFields}
+                  id="exampleEmail"
+                  placeholder="Email"
+                />
+              )}
 
               <span className="NewClient-span1" />
 
-              <Input
-                className="NewClient-input"
-                type="text"
-                name="data_nasc"
-                data-value="data_nasc"
-                value={state.data_nasc}
-                onChange={handleChangeFields}
-                placeholder="Data de Nascimento"
-              />
+              {validates.data === "valid" ? (
+                <Input
+                  valid
+                  className="NewClient-input"
+                  type="date"
+                  name="data_nasc"
+                  data-value="data_nasc"
+                  value={state.data_nasc}
+                  onChange={handleChangeFields}
+                  placeholder="Data de Nascimento"
+                />
+              ) : (
+                <Input
+                  invalid
+                  className="NewClient-input"
+                  type="date"
+                  name="data_nasc"
+                  data-value="data_nasc"
+                  value={state.data_nasc}
+                  onChange={handleChangeFields}
+                  placeholder="Data de Nascimento"
+                />
+              )}
 
               <span className="NewClient-span1" />
 
@@ -114,38 +210,41 @@ function NewClient(props) {
                 className="NewClient-input"
                 type="text"
                 name="nacionalidade"
-                data-value="naturalidade"
+                data-value="nacionalidade"
                 value={state.nacionalidade}
                 onChange={handleChangeFields}
-                placeholder="Nacioanlidade"
+                placeholder="Nacionalidade"
               />
 
               <span className="NewClient-span1" />
 
-              <Input
-                className="NewClient-input"
-                type="text"
-                name="cpf"
-                data-value="cpf"
-                value={state.cpf}
-                onChange={handleChangeFields}
-                placeholder="CPF"
-              />
+              {validates.cpf === "valid" ? (
+                <Input
+                  valid
+                  className="NewClient-input"
+                  type="text"
+                  name="cpf"
+                  data-value="cpf"
+                  value={state.cpf}
+                  onChange={handleChangeFields}
+                  placeholder="CPF"
+                />
+              ) : (
+                <Input
+                  invalid
+                  className="NewClient-input"
+                  type="text"
+                  name="cpf"
+                  data-value="cpf"
+                  value={state.cpf}
+                  onChange={handleChangeFields}
+                  placeholder="CPF"
+                />
+              )}
             </FormGroup>
           </Form>
 
           <div>
-            <Button
-              className="Login-button"
-              color="danger"
-              id="ButtonLogin"
-              onClick={() => props.return()}
-            >
-              Cancelar
-            </Button>
-
-            <span style={{ paddingLeft: "10px" }} />
-
             <Button
               className="Login-button"
               color="primary"
@@ -153,6 +252,17 @@ function NewClient(props) {
               onClick={handleCadastrar}
             >
               Cadastrar
+            </Button>
+
+            <span style={{ paddingLeft: "10px" }} />
+
+            <Button
+              className="Login-button"
+              color="danger"
+              id="ButtonLogin"
+              onClick={() => props.return()}
+            >
+              Cancelar
             </Button>
           </div>
         </div>
