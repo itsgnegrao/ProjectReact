@@ -27,7 +27,7 @@ Em caso de erro tente instalar também:
         cd ProjectReact
         docker build -t itsgnegrao/itsgnegrao-react-app .
         
-    Este comando deve levar algum tempo, tome uma xícara de café...
+    Este comando deve levar algum tempo, tome uma xícara de café ...
     
 ##### (Opção 2) Docker Hub:
 
@@ -35,17 +35,18 @@ Em caso de erro tente instalar também:
 
         docker pull itsgnegrao/itsgnegrao-react-app
 
-    Este comando deve levar algum tempo, tome uma xícara de café...
+    Este comando deve levar algum tempo, tome uma xícara de café ...
     
 #### Passos para execução da imagem Docker:
-3.  Execute a imagem:
+1.  Execute a imagem:
 
         docker run -d -it --rm -v ${PWD}:/app -v /app/node_modules -p 3000:3000 --name react-app itsgnegrao/itsgnegrao-react-app:latest
 
-4.  Acesse o endereço do APP:
+2.  Acesse o endereço do APP:
 
         http://localhost:3000/
         
 #### Excerrar a execução:
+1.  Execute o comando:
         
     docker kill react-app
