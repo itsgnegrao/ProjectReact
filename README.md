@@ -7,6 +7,9 @@ Projeto ReactApp + Dockerfile
 Assumo que as seguintes dependências estão instaladas e funcionando:
 
  - [Docker 19.03.13](http://www.docker.io/gettingstarted/#h_installation)
+ 
+Em caso de erro tente instalar também:
+
  - [Node 14.13.1 + NPM 6.14.8](https://nodejs.org/en/download/current/)
  - [react-scripts 3.4.3](https://www.npmjs.com/package/react-scripts)
  
