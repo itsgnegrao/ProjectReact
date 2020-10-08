@@ -1,5 +1,4 @@
-FROM node:14.13.1
-
+FROM node:14
 RUN mkdir /app
 WORKDIR /app
 COPY package.json /app
