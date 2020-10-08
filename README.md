@@ -12,8 +12,8 @@ Assumo que as seguintes dependências estão instaladas e funcionando:
  
 ## Build + Exec + Kill
 
-###Passos para construção da imagem Docker:
-#####(Opção 1) Github:
+### Passos para construção da imagem Docker:
+##### (Opção 1) Github:
 
 1.  Clone o repositório:
 
@@ -26,7 +26,7 @@ Assumo que as seguintes dependências estão instaladas e funcionando:
         
     Este comando deve levar algum tempo, tome uma xícara de café...
     
-#####(Opção 2) Docker Hub:
+##### (Opção 2) Docker Hub:
 
 1.  Clone a imagem previamente contruída:
 
@@ -34,7 +34,7 @@ Assumo que as seguintes dependências estão instaladas e funcionando:
 
     Este comando deve levar algum tempo, tome uma xícara de café...
     
-####Passos para execução da imagem Docker:
+#### Passos para execução da imagem Docker:
 3.  Execute a imagem:
 
         docker run -d -it --rm -v ${PWD}:/app -v /app/node_modules -p 3000:3000 --name react-app itsgnegrao/itsgnegrao-react-app:latest
@@ -43,6 +43,6 @@ Assumo que as seguintes dependências estão instaladas e funcionando:
 
         http://localhost:3000/
         
-####Excerrar a execução:
+#### Excerrar a execução:
         
     docker kill react-app
