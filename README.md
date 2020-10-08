@@ -51,4 +51,5 @@ Em caso de erro tente instalar também:
 #### Excerrar a execução:
 
 1.  Execute o comando:
+
     docker kill react-app
