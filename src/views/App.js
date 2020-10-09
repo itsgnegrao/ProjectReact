@@ -25,6 +25,10 @@ class App extends React.Component {
     if (this.cookies.get("user")) {
       this.state.user = this.cookies.get("user");
     }
+
+    if (process.env["REACT_APP_API_URL_APIV1"] === undefined) {
+      process.env["REACT_APP_API_URL_APIV1"] = "http://localhost:8080/api";
+    }
   }
 
   onLogin = userNew => {
